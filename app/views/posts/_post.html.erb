@@ -1,0 +1,16 @@
+<div id="<%= dom_id post %>" class="w-full sm:w-auto my-5 space-y-3">
+  <h2 class="text-2xl font-semibold">
+    <%= link_to post.title, post, class: "text-gray-900 hover:text-blue-600" %>
+  </h2>
+  <% unless local_assigns[:show_body] %>
+    <% if post.excerpt.present? %>
+      <p class="text-gray-600"><%= post.excerpt %></p>
+    <% end %>
+    <p class="text-sm text-gray-500"><%= l(post.created_at, format: :long) %></p>
+  <% end %>
+  <% if local_assigns[:show_body] %>
+    <div class="prose">
+      <%= post.body %>
+    </div>
+  <% end %>
+</div>
