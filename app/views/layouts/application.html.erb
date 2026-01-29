@@ -19,11 +19,18 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "actiontext", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
+    <nav class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 px-5 py-3 z-10">
+      <div class="container mx-auto flex gap-4">
+        <%= link_to "Posts", root_path, class: "font-medium text-gray-700 hover:text-gray-900" %>
+        <%= link_to "Корзина", trash_posts_path, class: "font-medium text-gray-700 hover:text-gray-900" %>
+      </div>
+    </nav>
     <main class="container mx-auto mt-28 px-5 flex">
       <%= yield %>
     </main>
