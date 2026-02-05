@@ -6,7 +6,9 @@ class PostsController < ApplicationController
 
   # GET /posts or /posts.json
   def index
-    @posts = Post.kept.order(created_at: :desc)
+    scope = Post.kept.order(created_at: :desc)
+    scope = scope.where(type: type_filter) if type_filter.present?
+    @posts = scope
   end
 
   # GET /posts/trash
@@ -20,7 +22,7 @@ class PostsController < ApplicationController
 
   # GET /posts/new
   def new
-    @post = Post.new
+    @post = post_class_for_new.new
   end
 
   # GET /posts/1/edit
@@ -29,12 +31,13 @@ class PostsController < ApplicationController
 
   # POST /posts or /posts.json
   def create
-    @post = Post.new(post_params)
+    klass = post_class_for_create
+    @post = klass.new(post_params.except(:type).merge(type: klass.name))
 
     respond_to do |format|
       if @post.save
-        format.html { redirect_to @post, notice: "Post was successfully created." }
-        format.json { render :show, status: :created, location: @post }
+        format.html { redirect_to post_path(@post), notice: "Post was successfully created." }
+        format.json { render :show, status: :created, location: post_url(@post) }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @post.errors, status: :unprocessable_entity }
@@ -45,9 +48,9 @@ class PostsController < ApplicationController
   # PATCH/PUT /posts/1 or /posts/1.json
   def update
     respond_to do |format|
-      if @post.update(post_params)
-        format.html { redirect_to @post, notice: "Post was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @post }
+      if @post.update(post_params.except(:type))
+        format.html { redirect_to post_path(@post), notice: "Post was successfully updated.", status: :see_other }
+        format.json { render :show, status: :ok, location: post_url(@post) }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @post.errors, status: :unprocessable_entity }
@@ -86,6 +89,28 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.expect(post: [ :title, :body ])
+    params.expect(post: [ :type, :title, :body, :audio_file ])
+  end
+
+  def type_filter
+    return nil if params[:type].blank?
+
+    case params[:type].to_s.downcase
+    when "article" then "Article"
+    when "episode" then "Episode"
+    else nil
+    end
+  end
+
+  def post_class_for_new
+    case params[:type].to_s.downcase
+    when "episode" then Episode
+    else Article
+    end
+  end
+
+  def post_class_for_create
+    type = post_params[:type].to_s
+    type.presence_in(%w[ Article Episode ]) ? type.constantize : Article
   end
 end

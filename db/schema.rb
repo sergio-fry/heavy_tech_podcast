@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_29_155427) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_05_184509) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -53,11 +53,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_29_155427) do
   end
 
   create_table "posts", force: :cascade do |t|
+    t.string "audio_mime_type"
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
+    t.integer "duration_seconds"
     t.string "title", null: false
+    t.string "type"
     t.datetime "updated_at", null: false
     t.index ["deleted_at"], name: "index_posts_on_deleted_at"
+    t.index ["type"], name: "index_posts_on_type"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

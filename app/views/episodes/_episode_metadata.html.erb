@@ -1,0 +1,5 @@
+<% if episode.duration_seconds.present? %>
+  <p class="text-sm text-gray-500 mt-1">
+    <%= episode.duration_seconds / 60 %> min <%= episode.duration_seconds % 60 %> sec
+  </p>
+<% end %>

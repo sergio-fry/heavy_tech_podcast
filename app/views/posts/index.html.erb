@@ -7,10 +7,17 @@
 
   <div class="flex justify-between items-center flex-wrap gap-2">
     <h1 class="font-bold text-4xl">Posts</h1>
-    <div class="flex gap-2">
+    <div class="flex gap-2 flex-wrap">
       <%= link_to "Корзина", trash_posts_path, class: "rounded-md px-3.5 py-2.5 bg-gray-200 hover:bg-gray-300 font-medium" %>
-      <%= link_to "New post", new_post_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium" %>
+      <%= link_to "New Article", new_typed_posts_path(type: "article"), class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium" %>
+      <%= link_to "New Episode", new_typed_posts_path(type: "episode"), class: "rounded-md px-3.5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium" %>
     </div>
+  </div>
+
+  <div class="flex gap-2 mt-4 border-b border-gray-200">
+    <%= link_to "All", posts_path, class: "pb-2 px-2 font-medium #{params[:type].blank? ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}" %>
+    <%= link_to "Articles", posts_path(type: "article"), class: "pb-2 px-2 font-medium #{params[:type] == 'article' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}" %>
+    <%= link_to "Episodes", posts_path(type: "episode"), class: "pb-2 px-2 font-medium #{params[:type] == 'episode' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}" %>
   </div>
 
   <div id="posts" class="min-w-full space-y-6">
@@ -19,12 +26,12 @@
         <div class="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
           <div class="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-4">
             <div class="flex-1 min-w-0">
-              <%= render post %>
+              <%= render "posts/post", post: post %>
             </div>
             <div class="w-full sm:w-auto flex flex-col sm:flex-row gap-2 shrink-0">
-              <%= link_to "Show", post, class: "text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 font-medium" %>
+              <%= link_to "Show", post_path(post), class: "text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 font-medium" %>
               <%= link_to "Edit", edit_post_path(post), class: "text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 font-medium" %>
-              <%= button_to "Destroy", post, method: :delete, class: "rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+              <%= button_to "Destroy", post_path(post), method: :delete, class: "rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
             </div>
           </div>
         </div>
